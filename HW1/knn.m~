@@ -12,17 +12,15 @@ function predlabels = knn(traindata, trainlabels, testdata, k, f, D)
 train_dims = size(traindata);
 test_dims = size(testdata);
 
-%adjust the matrix dimensions to match
-if train_dims(1) > test_dims(1)
-    test_dims(train_dims) = 0;
-elseif train_dims(1) < test_dims(1)
-    train_dims(test_dims) = 0;
-end
+    %Create a matrix where each row is a copy of the test data
+    test_matrix = ones(train_dims(1), 1) * testdata;
 
-distance_matrix = pdist2(traindata, test_matrix);
-distance_matrix = distance_matrix(:,1)
+    difference_matrix = traindata - test_matrix;
+    distance_matrix = difference_matrix * difference_matrix.';
 
-[row,col] = find(distance_matrix == min(distance_matrix(:)));
+    distance_diagonals = distance_matrix .* eye(size(distance_matrix));
 
+    min_distance = min(distance_matrix(distance_diagonals~=0));
+    [row col] = find(abs(distance_diagonals)==min_distance);
 
-predlabels = trainlabels(row(1));
+    predlabels = trainlabels(row(1));
