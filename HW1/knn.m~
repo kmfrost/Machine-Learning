@@ -20,18 +20,14 @@ for testpoint = 1:ntest
     test_matrix = ones(ntrain, 1) * testdata(testpoint, :);
 
     if D ~= 0
-        [~, indices] = n_min(diag(D), k);
-    elseif strcmp(f, 'sqeuclidean')
-        difference_matrix = traindata - test_matrix;
-        distance_matrix = difference_matrix * difference_matrix.';
-        [~, indices] = n_min(diag(distance_matrix), k);
-        
-    elseif strcmp(f, 'mahalanobis')
+        [~, index] = min(diag(D));
+    elseif f == 'sqeuclidean'
+        [~, index] = min(diag([~, index] = min(diag(distance_matrix));
+    elseif f == 'mahala'
         disp('using Mahalanobis');
     end
 
-    n_labels = trainlabels(indices);
-    predlabels(testpoint) = mode(n_labels);
+    predlabels(testpoint) = trainlabels(index(1));
 end
 
 csv_data = [(1:ntest)', predlabels];
