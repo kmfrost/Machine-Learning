@@ -26,7 +26,7 @@ cross_val_percent = zeros(1, k);
 train_error = zeros(1,k);
 
 for k_iter=1:k
-    fprintf('k = %d\n', k_iter);
+    fprintf('\nk = %d\n', k_iter);
     errors = zeros(n, 1);
 
     for iter=1:n

@@ -1,4 +1,4 @@
-function   cv_error = knncv(traindata, trainlabels, n, k, f, D)
+function   cv_error = knncv_iter(traindata, trainlabels, n, k, f, D)
 
 % traindata is a ntrain x ndim matrix that represents your training data (each row is one picture and each column is a feature);
 % trainlabels is an ntrain x 1 vector holding the labels (integers between 1 and 8) for the training data;
@@ -26,7 +26,7 @@ cross_val_percent = zeros(1, k);
 train_error = zeros(1,k);
 
 for k_iter=1:k
-    fprintf('k = %d\n', k_iter);
+    fprintf('\nk = %d\n', k_iter);
     errors = zeros(n, 1);
 
     for iter=1:n
@@ -66,5 +66,6 @@ plot(cross_val_percent);
 hold on;
 plot(train_error);
 legend('Cross-value Error', 'Train Error');
+grid on;
 
 
