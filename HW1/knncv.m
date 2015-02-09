@@ -51,5 +51,5 @@ for iter=1:n
     
 end
 
-cross_val_error = mean(errors)
-cross_val_percent = cross_val_error/part_size*100
+cross_val_percent = mean(errors)/part_size*100
+percent_correct = 1-cross_val_percent

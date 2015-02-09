@@ -1,0 +1,18 @@
+%variance calculator
+
+load('../../../Documents/School/Spring 2015/Intro to Machine Learning/HW 1/k-NN/SceneCateg.mat')
+
+[ntrain, ndim] = size(trainfeatgist);
+part_size = ntrain/8;
+
+train_var = zeros(8, ndim);
+
+for i=1:8
+    train_var(i, :) = var(trainfeatgist(1+(i-1)*part_size:i*part_size, :));
+    %figure;
+    %plot(train_var(i, :));
+    %title(i)
+end
+
+weights = 1./mean(train_var,1);  % average the variance for each column
+diag_weights = diag(weights

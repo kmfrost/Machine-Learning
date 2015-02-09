@@ -8,6 +8,8 @@ function predlabels = knn(traindata, trainlabels, testdata, k, f, D)
 % D is an ntrain x ntest matrix of precomputed pairwise distances (optional in the function input and your inside code should handle the case where it does not exist, e.g. by calling f); 
 % predlabels is ntest x 1 vector holding predicted labels for the test instances.
 
+load('diag_weights.mat');
+
 %check the dimensions of both the incoming vectors
 [ntrain, ndim] = size(traindata);
 [ntest, ~] = size(testdata);
@@ -24,10 +26,22 @@ for testpoint = 1:ntest
     elseif strcmp(f, 'sqeuclidean')
         difference_matrix = traindata - test_matrix;
         distance_matrix = difference_matrix * difference_matrix.';
+        [~, indices] = n_min(diag(distance_matrix), k);  
+        
+    elseif strcmp(f, 'w_sqeuclidean')
+        difference_matrix = traindata - test_matrix;
+        distance_matrix = difference_matrix * diag_weights * difference_matrix.';
         [~, indices] = n_min(diag(distance_matrix), k);
         
     elseif strcmp(f, 'mahalanobis')
-        disp('using Mahalanobis');
+        difference_matrix = traindata - test_matrix;
+        distance_matrix = difference_matrix * nancov(traindata) * difference_matrix.';
+        [~, indices] = n_min(diag(distance_matrix), k);
+        
+    elseif strcmp(f, 'w_mahalanobis')
+        difference_matrix = traindata - test_matrix;
+        distance_matrix = difference_matrix * diag_weights * nancov(traindata) * difference_matrix.';
+        [~, indices] = n_min(diag(distance_matrix), k);        
     end
 
     n_labels = trainlabels(indices);
