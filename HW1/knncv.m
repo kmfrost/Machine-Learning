@@ -22,34 +22,39 @@ for part=1:n
     train_sect(part, :) = [(part-1)*part_size+1, part * part_size];
 end
 
-errors = zeros(n, 1);
+for k=1:
+    errors = zeros(n, 1);
 
-for iter=1:n
-    fprintf('Iteration: %d\n', iter);
-    
-    %divide the data into a test section and a training section
-    %where the test section represents 1 part and the training section
-    %represents n-1 parts
-    test_data= traindata_shuf(train_sect(iter, 1):train_sect(iter,2), :);
-    test_labels = trainlabels_shuf(train_sect(iter,1):train_sect(iter,2));
-    if train_sect(iter,1) == 1
-        iter_train_data = traindata_shuf(train_sect(iter,2)+1:end, :);
-        iter_train_labels = trainlabels_shuf(train_sect(iter,2)+1:end);
-    else
-        iter_train_data = zeros(part_size*(n-1), ndim);
-        iter_train_labels = zeros(part_size*(n-1),1);
-        
-        iter_train_data(1:train_sect(iter,1)-1, :) = traindata_shuf(1:train_sect(iter,1)-1, :);
-        iter_train_labels(1:train_sect(iter,1)-1) = trainlabels_shuf(1:train_sect(iter,1)-1);
+    for iter=1:n
+        fprintf('Iteration: %d\n', iter);
 
-        iter_train_data(train_sect(iter,1):end, :) = traindata_shuf(train_sect(iter,2)+1:end, :);
-        iter_train_labels(train_sect(iter,1):end) = trainlabels_shuf(train_sect(iter,2)+1:end);
+        %divide the data into a test section and a training section
+        %where the test section represents 1 part and the training section
+        %represents n-1 parts
+        test_data= traindata_shuf(train_sect(iter, 1):train_sect(iter,2), :);
+        test_labels = trainlabels_shuf(train_sect(iter,1):train_sect(iter,2));
+        if train_sect(iter,1) == 1
+            iter_train_data = traindata_shuf(train_sect(iter,2)+1:end, :);
+            iter_train_labels = trainlabels_shuf(train_sect(iter,2)+1:end);
+        else
+            iter_train_data = zeros(part_size*(n-1), ndim);
+            iter_train_labels = zeros(part_size*(n-1),1);
+
+            iter_train_data(1:train_sect(iter,1)-1, :) = traindata_shuf(1:train_sect(iter,1)-1, :);
+            iter_train_labels(1:train_sect(iter,1)-1) = trainlabels_shuf(1:train_sect(iter,1)-1);
+
+            iter_train_data(train_sect(iter,1):end, :) = traindata_shuf(train_sect(iter,2)+1:end, :);
+            iter_train_labels(train_sect(iter,1):end) = trainlabels_shuf(train_sect(iter,2)+1:end);
+        end
+
+        labels = knn(iter_train_data, iter_train_labels, test_data, k, f, D);
+        errors(iter) = nnz(labels-test_labels);
+
     end
-    
-    labels = knn(iter_train_data, iter_train_labels, test_data, k, f, D);
-    errors(iter) = nnz(labels-test_labels);
-    
-end
 
-cross_val_percent = mean(errors)/part_size*100
-percent_correct = 1-cross_val_percent
+    cross_val_percent = mean(errors)/part_size
+    percent_correct = 1-cross_val_percent
+
+    labels = knn(traindata, trainlabels, traindata, k, f, D);
+    train_error = nnz(labels-trainlabels)/ntrain
+    train_correct = 1-train_error
