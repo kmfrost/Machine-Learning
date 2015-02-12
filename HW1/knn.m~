@@ -41,12 +41,11 @@ for testpoint = 1:ntest
         %k stands for kernel width for this distance calculation
         difference_matrix = traindata - test_matrix;
         distance_matrix = difference_matrix * diag_weights * difference_matrix.';
-        [values, indices] = n_min(diag(distance_matrix), ntrain);
+        [values, indices] = n_min(diag(distance_matrix), ntrain/10);
         n_labels = trainlabels(indices);
-        weights = exp(-abs(values)./k^2);
-        %weights = exp(-values.^2./k^2);
+        weights = exp(-values.^2./k^2);
         label_counts = zeros(1,8);
-        for point=1:(ntrain)
+        for point=1:(ntrain/10)
             label_counts(n_labels(point)) = label_counts(n_labels(point)) + weights(point);
         end
         [~, predlabels(testpoint)] = max(label_counts);
@@ -69,14 +68,7 @@ for testpoint = 1:ntest
     elseif strcmp(f, 'w_mahalanobis')
         difference_matrix = traindata - test_matrix;
         distance_matrix = difference_matrix * diag_weights * nancov(traindata) * difference_matrix.';
-        [values, indices] = n_min(diag(distance_matrix), ntrain/10);
-        n_labels = trainlabels(indices);
-        weights = exp(-values.^2./k^2);
-        label_counts = zeros(1,8);
-        for point=1:(ntrain/10)
-            label_counts(n_labels(point)) = label_counts(n_labels(point)) + weights(point);
-        end
-        [~, predlabels(testpoint)] = max(label_counts);
+        [min_vals, indices] = n_min(diag(distance_matrix), k);
     
     else
         error('Unknown distance function.');
