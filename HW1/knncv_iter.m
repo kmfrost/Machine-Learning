@@ -65,7 +65,9 @@ end
 plot(cross_val_percent);
 hold on;
 plot(train_error);
-legend('Cross-value Error', 'Train Error');
+legend('Cross-value Error', 'Train Error', 'Location', 'SouthEast');
 grid on;
+xlabel('k');
+ylabel('Error Rate')
 
 
