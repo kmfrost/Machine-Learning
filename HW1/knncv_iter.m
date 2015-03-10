@@ -62,6 +62,7 @@ for k_iter=1:k
     train_error(k_iter) = nnz(labels-trainlabels)/ntrain;
 end
 
+figure;
 plot(cross_val_percent);
 hold on;
 plot(train_error);
@@ -69,5 +70,7 @@ legend('Cross-value Error', 'Train Error', 'Location', 'SouthEast');
 grid on;
 xlabel('k');
 ylabel('Error Rate')
+
+[min_percentage, min_index] = min(cross_val_percent)
 
 
