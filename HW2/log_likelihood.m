@@ -6,5 +6,5 @@ m = length(y); % number of training examples
 theta_x = sigmoid(X*w);
 
 %calculate the cost
-J = sum(y*w.'*X.' - log(1+e^(X*w)));
+J = sum(y.*(X*w) - log(1+exp(X*w)));
 end
