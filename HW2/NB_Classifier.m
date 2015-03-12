@@ -38,22 +38,13 @@ for i=1:n
     Y0_len = length(find(Y0_col));
     Y1_col = data_Y1(:, i);
     Y1_len = length(find(Y1_col));
-    tables(i, 1, 1) = length(find(Y0_col < 0))/Y0_len;
-    if tables(i, 1, 1) == 0  % smooth
-        tables(i, 1, 1) = 1/Y0_len;
-    end
-    tables(i, 1, 2) = length(find(Y1_col < 0))/Y1_len;
-    if tables(i, 1, 2) == 0
-        tables(i, 1, 2) = 1/Y1_len;
-    end
-    tables(i, 2, 1) = length(find(Y0_col > 0))/Y0_len;
-    if tables(i, 2, 1) == 0
-        tables(i, 2, 1) = 1/Y0_len;
-    end
-    tables(i, 2, 2) = length(find(Y1_col > 0))/Y1_len;
-    if tables(i, 2, 2) == 0
-        tables(i, 2, 2) = 1/Y1_len;
-    end
+
+    %fill the tables
+    %add 1 to each bin for smoothing
+    tables(i, 1, 1) = (length(find(Y0_col < 0))+1)/(Y0_len+1);
+    tables(i, 1, 2) = (length(find(Y1_col < 0))+1)/(Y1_len+1);
+    tables(i, 2, 1) = (length(find(Y0_col > 0))+1)/(Y0_len+1);
+    tables(i, 2, 2) = (length(find(Y1_col > 0))+1)/(Y1_len+1);
 end
 
 [m1, n1] = size(TestData);

@@ -2,7 +2,8 @@ load('SenatorVoting.mat')
 
 [m, n] = size(TrainData);
 runs = 50;
-cv_error = zeros(runs, 1);
+NB_cv_error = zeros(runs, 1);
+LR_cv_error = zeros(runs, 1);
 num_train = round(m*(2/3));
 num_test = m-num_train;
 
@@ -20,25 +21,22 @@ for i = 1:runs
         subset = train_ints(1:use_train(j));
         X = [ones(use_train(j), 1) TrainData(subset, :)];
         y = TrainLabel(subset);
+        test_labels = [ones(num_test, 1) TrainData(test_ints, :)];
+        
+        lr_predlabels = LR_GA(X, y, test_labels);
+        nb_predlabels = NB_Classifier(X, y, test_labels);
 
-        %initialize weight vector
-        w = zeros(n + 1, 1);
-
-        min_change = 0.0001;
-        eta = 0.005;
-        max_iters = 500;
-        lambda = 0.015;
-
-        [w, LL] = gradientAscentReg(X, y, w, eta, min_change, max_iters, lambda);
-
-        predlabels = predict(w, [ones(num_test, 1) TrainData(test_ints, :)]);
-
-        cv_error(i, j) = sum(abs(TrainLabel(test_ints)-predlabels));
+        LR_cv_error(i, j) = sum(abs(TrainLabel(test_ints)-lr_predlabels));
+        NB_cv_error(i, j) = sum(abs(TrainLabel(test_ints)-nb_predlabels));
     end
 end
 
 figure;
-plot(use_train, mean(cv_error), '*-');
+plot(use_train, mean(LR_cv_error), '*-');
+hold on;
+grid on;
+plot(use_train, mean(NB_cv_error), '*-');
+legend('Logistic Regression', 'Naive Bayes');
 title(sprintf('Average error vs. number of training points over %d runs', runs));
 xlabel('Size of training data');
 ylabel('Average Error');

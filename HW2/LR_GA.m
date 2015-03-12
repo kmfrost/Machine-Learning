@@ -1,4 +1,4 @@
-function predlabels = LR_GA(TrainData, TrainLable, TestData)
+function predlabels = LR_GA(TrainData, TrainLabel, TestData)
 %return prediction labels for a logistic regression classifier 
 %using gradient ascent given Training Data, Traning
 %Lables, and Test Data
@@ -20,7 +20,3 @@ max_iters = 500;
 [m1, n1] = size(TestData);
 predlabels = predict(w, [ones(m1, 1) TestData]);
 
-csv_data = [(1:m1)', predlabels];
-dlmwrite('LR_preds.csv','Senator_ID,Party', 'delimiter', '', 'coffset', 1);
-dlmwrite('LR_preds.csv', csv_data, '-append');
-plot(LL)
