@@ -1,4 +1,7 @@
-load('SenatorVoting.mat')
+function predlabels = LR_GA(TrainData, TrainLable, TestData)
+%return prediction labels for a logistic regression classifier 
+%using gradient ascent given Training Data, Traning
+%Lables, and Test Data
 
 [m, n] = size(TrainData);
 
@@ -9,11 +12,10 @@ y = TrainLabel;
 w = zeros(n + 1, 1);
 
 min_change = 0.0001;
-eta = 0.005;
+eta = 0.01;
 max_iters = 500;
-lambda = 0.15;
 
-[w, LL] = gradientAscentReg(X, y, w, eta, min_change, max_iters, lambda);
+[w, LL] = gradientAscent(X, y, w, eta, min_change, max_iters);
 
 [m1, n1] = size(TestData);
 predlabels = predict(w, [ones(m1, 1) TestData]);
@@ -21,6 +23,4 @@ predlabels = predict(w, [ones(m1, 1) TestData]);
 csv_data = [(1:m1)', predlabels];
 dlmwrite('LR_preds.csv','Senator_ID,Party', 'delimiter', '', 'coffset', 1);
 dlmwrite('LR_preds.csv', csv_data, '-append');
-
-figure;
 plot(LL)

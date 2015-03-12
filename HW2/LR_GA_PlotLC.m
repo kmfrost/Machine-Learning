@@ -7,7 +7,7 @@ num_train = round(m*(2/3));
 num_test = m-num_train;
 
 %use_train = [2 4 8 16 33];
-use_train = [1:num_train]
+use_train = [1:num_train];
 
 for i = 1:runs
     %randomly divide the data into train (2/3) and test (1/3) sets
@@ -27,7 +27,7 @@ for i = 1:runs
         min_change = 0.0001;
         eta = 0.005;
         max_iters = 500;
-        lambda = 0.01;
+        lambda = 0.015;
 
         [w, LL] = gradientAscentReg(X, y, w, eta, min_change, max_iters, lambda);
 

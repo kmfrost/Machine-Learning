@@ -1,11 +1,11 @@
 load('SenatorVoting.mat')
 
 [m, n] = size(TrainData);
-runs = 20;
+runs = 50;
 num_train = round(m*(2/3));
 num_test = m-num_train;
 
-lambda_test = linspace(0, 1, 1000);
+lambda_test = linspace(0, 0.5, 100);
 
 num_l = length(lambda_test);
 avg_cv_error = zeros(num_l,1);
