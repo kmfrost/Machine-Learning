@@ -1,8 +1,12 @@
-%NB Classifier
+%this script runs a NB classifier on the training and
+%test data supplied from 'SenatorVoting.mat'
+%the output is saved as 'NB_preds.csv'
+
 clear all
 load('SenatorVoting.mat')
 
 [m, n] = size(TrainData);
+smooth = 1;
 
 %find the counts and probabilities of y=1 and y=0
 c_y1 = sum(TrainLabel);
@@ -31,38 +35,38 @@ num_Y0 = length(data_Y0_indices);
 %        |
   
 tables = zeros(n, 2, 2);
-for i=1:n
-    Y0_col = data_Y0(:, i);
+for ii=1:n
+    Y0_col = data_Y0(:, ii);
     Y0_len = length(find(Y0_col));
-    Y1_col = data_Y1(:, i);
+    Y1_col = data_Y1(:, ii);
     Y1_len = length(find(Y1_col));
     
-    %fill the tables
-    %add 1 to each bin for smoothing
-    tables(i, 1, 1) = (length(find(Y0_col < 0))+1)/(Y0_len+1);
-    tables(i, 1, 2) = (length(find(Y1_col < 0))+1)/(Y1_len+1);
-    tables(i, 2, 1) = (length(find(Y0_col > 0))+1)/(Y0_len+1);
-    tables(i, 2, 2) = (length(find(Y1_col > 0))+1)/(Y1_len+1);
+    %add 'smooth' to each bin for smoothing
+    tables(ii, 1, 1) = (length(find(Y0_col < 0))+smooth)/(Y0_len+smooth);
+    tables(ii, 1, 2) = (length(find(Y1_col < 0))+smooth)/(Y1_len+smooth);
+    tables(ii, 2, 1) = (length(find(Y0_col > 0))+smooth)/(Y0_len+smooth);
+    tables(ii, 2, 2) = (length(find(Y1_col > 0))+smooth)/(Y1_len+smooth);
+
 end
 
 [m1, n1] = size(TestData);
 predlabels = zeros(m1, 1);
-for i = 1:m1
+for ii = 1:m1
    p0 = prior(1);
    p1 = prior(2);
-   for j = 1:n1
-       vote = TestData(i, j);
+   for jj = 1:n1
+       vote = TestData(ii, jj);
        if vote == -1
-           p0 = p0 * tables(j, 1, 1);
-           p1 = p1 * tables(j, 1, 2);
+           p0 = p0 * tables(jj, 1, 1);
+           p1 = p1 * tables(jj, 1, 2);
        elseif vote == 1
-           p0 = p0 * tables(j, 2, 1);
-           p1 = p1 * tables(j, 2, 2);
+           p0 = p0 * tables(jj, 2, 1);
+           p1 = p1 * tables(jj, 2, 2);
        end
    if p0 > p1
-       predlables(i) = 0;
+       predlables(ii) = 0;
    else
-       predlabels(i) = 1;
+       predlabels(ii) = 1;
    end
    end
        

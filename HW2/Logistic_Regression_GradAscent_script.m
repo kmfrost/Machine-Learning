@@ -1,4 +1,4 @@
-load('SenatorVoting.mat')
+0load('SenatorVoting.mat')
 
 [m, n] = size(TrainData);
 

@@ -1,3 +1,11 @@
+%this script runs LR using regularized gradient ascent on the training and
+%test data supplied from 'SenatorVoting.mat'
+%It also plots the log likelihood function to ensure that gradient asecnet
+%converges properly
+
+%the output is saved as 'LR_preds.csv'
+
+
 load('SenatorVoting.mat')
 
 [m, n] = size(TrainData);

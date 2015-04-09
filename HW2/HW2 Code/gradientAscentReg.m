@@ -14,5 +14,3 @@ for iter = 1:max_iters
     end
 end
 
-%disp(iter)
-
