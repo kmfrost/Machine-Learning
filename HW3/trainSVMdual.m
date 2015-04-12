@@ -23,7 +23,9 @@ ub = C*ones(m,1);
 
 lb = zeros(m,1);
 
+tic
 z = qpas(H, f, [], [], A, b, lb, ub);
+toc
 %z = quadprog(H, f, [], [], A, b, lb, ub);
 
 svmModel.alpha = z;

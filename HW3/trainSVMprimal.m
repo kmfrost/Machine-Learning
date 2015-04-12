@@ -25,7 +25,9 @@ b = -1*ones(m,1);
 
 lb = [ones(1,n)*-inf zeros(1,m) -inf].';
 
+tic
 z = quadprog(H, f, A, b, [], [], lb, []);
+toc
 
 svmModel.w0 = z(end);
 svmModel.w = z(1:n);

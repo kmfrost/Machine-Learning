@@ -2,17 +2,27 @@
 clear all
 load('hw3_parsed.mat');
 
-C = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80];
-perc_correct = zeros(1, length(C));
+C = [0.5, 1, 3, 10, 30, 100, 300, 500, 1000];
+AUC = zeros(1, length(C));
 idx = 1;
 for c=C
+    fprintf('C = %d\n', c);
     svmModel = trainSVMprimal(traindata, trainlabels, c);
-    
     y_hat = predict(svmModel, valdata);
-    good_preds = y_hat == vallabels;
-    perc_correct(idx) = sum(good_preds)/length(vallabels);
-    disp(perc_correct(idx));
+    [X, Y, T, AUC(idx)] = perfcurve(vallabels, y_hat, '1');
+    disp(AUC(idx));
     idx = idx+1;
 end
 
-plot([1:length(C)], perc_correct)
+plot([1:length(C)], AUC)
+[val, idx] = max(AUC);
+
+fprintf('Use C = %d\n', C(idx));
+
+[m1, n1] = size(testdata);
+svmModel = trainSVMprimal(traindata, trainlabels, C(idx));
+preds = predict(svmModel, testdata);
+
+csv_data = [(1:m1)' preds];
+dlmwrite('SVM_primal_c100.csv', 'EventID,Prediction', 'delimiter', '', 'coffset', 1);
+dlmwrite('SVM_primal_c100.csv', csv_data, '-append');
