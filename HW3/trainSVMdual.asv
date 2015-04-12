@@ -30,7 +30,5 @@ svmModel.alpha = z;
 
 
 w = traindata.'*(z.*trainlabels);
-w0_all = trainlabels - traindata*w;
+w0 = 
 svmModel.w = w(1:end);
-svmModel.w0 = mean(w0_all);
-
